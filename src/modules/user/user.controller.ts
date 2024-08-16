@@ -1,7 +1,17 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common'
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+} from '@nestjs/common'
 import { UserService } from './user.service'
-import { ApiBody, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger'
 import { RegisterDto } from './dto/resgister.dto'
+import { UserEntity } from './entities/user.entity'
+import ReqUser from '../infrastructure/decorators/user.decorator'
+import { JwtAuthGuard } from '../infrastructure/guards/jwt.guards'
 
 @ApiTags('Users')
 @Controller('users')
@@ -25,5 +35,19 @@ export class UserController {
     })
 
     return { message: 'success' }
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async me(@ReqUser() user: UserEntity): Promise<UserEntity> {
+    return user
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async users(): Promise<UserEntity[]> {
+    return this.userService.find()
   }
 }

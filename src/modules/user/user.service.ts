@@ -25,18 +25,18 @@ export class UserService {
   //   ]
   // }
 
+  async find(): Promise<UserEntity[]> {
+    return this.userDocs
+  }
+
   async findOneUser(username: string): Promise<UserEntity> {
-    console.log('🚀 ~ UserService ~ findOneUser ~ username:', username)
-    console.log('🚀 ~ UserService ~ create ~ userDocs:', this.userDocs)
     const user = this.userDocs.find((user) => user.username === username)
-    console.log('🚀 ~ UserService ~ findOneUser ~ user:', user)
 
     return user
   }
 
   async create(user: UserEntity): Promise<UserEntity> {
     this.userDocs.push(user)
-    console.log('🚀 ~ UserService ~ create ~ userDocs:', this.userDocs)
 
     return user
   }
